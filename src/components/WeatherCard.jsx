@@ -1,6 +1,11 @@
 import { BiTrash } from "react-icons/bi";
 
 const WeatherCard = ({ city, onRemove }) => {
+  // Validate city data
+  if (!city || !city.name || !city.main || !city.weather || !city.weather[0]) {
+    return null; // Don't render if data is incomplete
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 relative">
       {onRemove && (
@@ -14,7 +19,9 @@ const WeatherCard = ({ city, onRemove }) => {
       )}
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">{city.name}</h2>
-        <p className="text-gray-600 mb-2">{city.sys.country}</p>
+        {city.sys?.country && (
+          <p className="text-gray-600 mb-2">{city.sys.country}</p>
+        )}
         <div className="flex justify-center items-center mb-4">
           <img
             src={`https://openweathermap.org/img/wn/${city.weather[0].icon}@2x.png`}
@@ -37,10 +44,12 @@ const WeatherCard = ({ city, onRemove }) => {
             <p className="font-semibold">Humidity</p>
             <p>{city.main.humidity}%</p>
           </div>
-          <div>
-            <p className="font-semibold">Wind Speed</p>
-            <p>{city.wind.speed} m/s</p>
-          </div>
+          {city.wind?.speed && (
+            <div>
+              <p className="font-semibold">Wind Speed</p>
+              <p>{city.wind.speed} m/s</p>
+            </div>
+          )}
           <div>
             <p className="font-semibold">Pressure</p>
             <p>{city.main.pressure} hPa</p>

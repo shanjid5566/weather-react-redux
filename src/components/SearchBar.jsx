@@ -48,7 +48,11 @@ const SearchBar = () => {
       </form>
       
       {loading && <p className="mt-4 text-center text-blue-600 font-semibold">Loading...</p>}
-      {error && <p className="mt-4 text-center text-red-500 font-semibold">Error: {error}</p>}
+      {error && (
+        <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+          <p className="font-semibold">❌ {error}</p>
+        </div>
+      )}
       
       {weatherData.length > 0 && (
         <div className="mt-6">
@@ -64,13 +68,15 @@ const SearchBar = () => {
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {weatherData.map((cityData) => (
-              <WeatherCard
-                key={cityData.id}
-                city={cityData}
-                onRemove={handleRemoveCity}
-              />
-            ))}
+            {weatherData
+              .filter((cityData) => cityData && cityData.id && cityData.name)
+              .map((cityData) => (
+                <WeatherCard
+                  key={cityData.id}
+                  city={cityData}
+                  onRemove={handleRemoveCity}
+                />
+              ))}
           </div>
         </div>
       )}
