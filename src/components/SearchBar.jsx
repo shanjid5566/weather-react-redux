@@ -26,24 +26,24 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="mb-6 max-w-7xl w-full px-4 mx-auto">
+    <div className="mb-6 w-full px-3 sm:px-4 lg:px-6 mx-auto max-w-7xl mt-4">
       <form
-        className="relative flex w-5xl rounded-full shadow-md mx-auto"
+        className="relative flex w-full max-w-4xl rounded-full shadow-lg mx-auto"
         onSubmit={handleSubmit}
       >
         <input
           type="text"
           placeholder="Search for a city..."
-          className="grow rounded-l-full py-3 px-6 text-lg text-gray-700 focus:outline-none"
+          className="flex-1 w-full rounded-l-full py-2 sm:py-3 px-4 sm:px-6 text-base sm:text-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={city}
           onChange={(e) => setCity(e.target.value)}
         />
         <button
           type="submit"
-          className="rounded-r-full bg-blue-500 px-6 py-3 text-white transition-colors duration-200 ease-in-out hover:bg-blue-600 focus:outline-none"
+          className="rounded-r-full bg-blue-500 px-4 sm:px-6 py-2 sm:py-3 text-white transition-colors duration-200 ease-in-out hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-center"
           aria-label="Search"
         >
-          <BiSearch size={24} />
+          <BiSearch className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
       </form>
       
@@ -55,19 +55,19 @@ const SearchBar = () => {
       )}
       
       {weatherData.length > 0 && (
-        <div className="mt-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold text-gray-800">
+        <div className="mt-6 sm:mt-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800">
               Search Results ({weatherData.length})
             </h3>
             <button
               onClick={handleClearAll}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm sm:text-base w-full sm:w-auto"
             >
               Clear All
             </button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {weatherData
               .filter((cityData) => cityData && cityData.id && cityData.name)
               .map((cityData) => (
