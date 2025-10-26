@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import weatherReducer from "./features/weather/weatherSlice.js";
-import { thunk } from "redux-thunk";
+// Use the fixed slice module (was malformed in weatherSlice.js)
+import weatherReducer from "./features/weather/weatherSliceFixed.js";
+
 export const store = configureStore({
   reducer: {
     // Add your reducers here
     weather: weatherReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
 });

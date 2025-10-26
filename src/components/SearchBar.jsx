@@ -1,11 +1,36 @@
 import { useState } from "react";
 import { BiSearch } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchWeatherData, clearWeatherData, removeCity } from "../redux/features/weather/weatherSliceFixed";
+import WeatherCard from "./WeatherCard";
 
 const SearchBar = () => {
   const [city, setCity] = useState("");
+  const { weatherData, loading, error } = useSelector((state) => state.weather);
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (city.trim()) {
+      dispatch(fetchWeatherData(city));
+      setCity(""); // Clear input after search
+    }
+  };
+
+  const handleRemoveCity = (cityId) => {
+    dispatch(removeCity(cityId));
+  };
+
+  const handleClearAll = () => {
+    dispatch(clearWeatherData());
+  };
+
   return (
     <div className="mb-6 max-w-7xl w-full px-4 mx-auto">
-      <form className="relative flex w-5xl rounded-full shadow-md mx-auto">
+      <form
+        className="relative flex w-5xl rounded-full shadow-md mx-auto"
+        onSubmit={handleSubmit}
+      >
         <input
           type="text"
           placeholder="Search for a city..."
@@ -21,6 +46,34 @@ const SearchBar = () => {
           <BiSearch size={24} />
         </button>
       </form>
+      
+      {loading && <p className="mt-4 text-center text-blue-600 font-semibold">Loading...</p>}
+      {error && <p className="mt-4 text-center text-red-500 font-semibold">Error: {error}</p>}
+      
+      {weatherData.length > 0 && (
+        <div className="mt-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-bold text-gray-800">
+              Search Results ({weatherData.length})
+            </h3>
+            <button
+              onClick={handleClearAll}
+              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+            >
+              Clear All
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {weatherData.map((cityData) => (
+              <WeatherCard
+                key={cityData.id}
+                city={cityData}
+                onRemove={handleRemoveCity}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

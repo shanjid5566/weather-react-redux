@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const fetchWeatherData = createAsyncThunk(
+export const fetchWeatherData = createAsyncThunk(
   "weather/fetchWeatherData",
   async (cityName) => {
     const apiKey = "8f68d836d78fa6935d616d5310d23f80";
@@ -16,7 +16,8 @@ const initialState = {
   loading: false,
   error: null,
 };
-export const weatherSlice = createSlice({
+
+const weatherSlice = createSlice({
   name: "weather",
   initialState,
   reducers: {
@@ -24,6 +25,11 @@ export const weatherSlice = createSlice({
       state.weatherData = [];
       state.loading = false;
       state.error = null;
+    },
+    removeCity: (state, action) => {
+      state.weatherData = state.weatherData.filter(
+        (city) => city.id !== action.payload
+      );
     },
   },
   extraReducers: (builder) => {
@@ -34,13 +40,20 @@ export const weatherSlice = createSlice({
       })
       .addCase(fetchWeatherData.fulfilled, (state, action) => {
         state.loading = false;
-        state.weatherData = action.payload;
+        // Add new city to the array if it doesn't already exist
+        const cityExists = state.weatherData.find(
+          (city) => city.id === action.payload.id
+        );
+        if (!cityExists) {
+          state.weatherData.push(action.payload);
+        }
       })
       .addCase(fetchWeatherData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error?.message || action.error || 'Failed';
       });
   },
 });
-export const { clearWeatherData } = weatherSlice.actions;
+
+export const { clearWeatherData, removeCity } = weatherSlice.actions;
 export default weatherSlice.reducer;
